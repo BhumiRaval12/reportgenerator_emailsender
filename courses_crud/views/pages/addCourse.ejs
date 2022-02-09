@@ -1,0 +1,48 @@
+<html>
+<!-- include header -->
+<%- include('../partials/header', { pageTitle: "Add Course :: Course Management" }) %>
+<!-- /include header -->
+
+<body>
+
+
+  <div class="container">
+    <h1>Add Courses</h1>
+  </div>
+  <!-- include footer -->
+  <%- include('../partials/footer') %>
+  <!-- /include footer -->
+
+  <div class="container">
+    <form id="open-form" action="/insert" method="POST">
+
+
+
+      <div class="form-group">
+        <label for="name">Course-Name</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Course-Name">
+      </div>
+      <div class="form-group">
+        <label for="duration">Course-Duration</label>
+        <input type="number" class="form-control" name="duration" id="duration" placeholder="Course-Duration">
+      </div>
+      <div class="form-group">
+        <label for="fees">Course-Fees</label>
+        <input type="number" class="form-control" name="fees" id="fees" placeholder="Course-Fees">
+      </div>
+
+      <div>
+        <button class="btn btn-success" type="submit">Submit</button>
+
+
+
+      </div>
+
+
+
+    </form>
+
+  </div>
+</body>
+
+</html>

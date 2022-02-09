@@ -1,0 +1,53 @@
+<!-- <html>
+<!-- include header  -->
+<%- include('../partials/header', { pageTitle: "Add Course :: Course Management" }) %>
+<!-- include header  -->
+
+<body>
+  <div>
+    <!-- include navbar -->
+    <%- include('../partials/navbar') %>
+    <!-- /include navbar -->
+  </div>
+  <div class="container">
+    <h1>Edit Course</h1>
+  </div>
+  <!-- include footer -->
+  <%- include('../partials/footer') %>
+  <!-- /include footer -->
+
+  <div class="h2 text-center m-4 text-danger">
+    All Available Courses
+  </div>
+
+  <form method="POST" class="thead-dark" id="editform">
+    <h2>Edit your Course here:</h2>
+    <div class="form-group">
+      <input type='number' name='id'></div>
+
+    <div class="form-group">
+      <label for="inputCName">Course-Name</label>
+      <input type="text" name="C_Name" id="inputCName" placeholder="Course-Name" autofocus required>
+
+    </div>
+    <div class="form-group">
+      <label for="inputCDuration">Course-Duration</label>
+      <input type="text" name="C_dur" id="inputC_duration" placeholder="Course-Duration" required>
+    </div>
+    <div class="form-group">
+      <label for="inputfees">Course-Fees:</label>
+      <input type="number" name="C_Fees" id="inputC_Fees" placeholder="Course-Fees" required>
+    </div>
+
+    <button class="btn btn-success" id="adbtn" class=" text-center" type="submit">Update</button>
+  </form>
+  </div>
+  </form>
+
+
+
+
+
+</body>
+
+</html>
