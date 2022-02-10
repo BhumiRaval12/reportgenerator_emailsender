@@ -3,6 +3,7 @@ let express = require('express');
 let router = require('./routes');
 let bodyparser = require('body-parser');
 let sequelize = require('./config/db_connection');
+let path = require('path');
 
 let app = express();
 const PORT = 8080;
@@ -19,12 +20,10 @@ app.use(
 // set view engine
 app.set('view engine', 'ejs');
 
+
+
 // Setting the router
 app.use('/', router);
-
-
-
-
 
 // Listen
 app.listen(PORT, () => {

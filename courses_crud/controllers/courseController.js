@@ -17,20 +17,14 @@ module.exports = {
 			res.render('pages/index', {
 				courses: courses
 			});
-			
+
 		}).catch((err) => {
 			console.log(err);
 
 
 		});
 
-		
-	},
-	add: (req, res) => {
-		res.render('pages/addCourse');
-	},
-	edit: (req, res) => {
-		res.render('pages/editCourse');
+
 	},
 
 	insert: (req, res) => {
@@ -49,6 +43,58 @@ module.exports = {
 
 		});
 
+	},
+
+	add: (req, res) => {
+		res.render('pages/addCourse');
+	},
+
+
+	// edit 
+
+	getEdit: (req, res) => {
+		table.findAll({
+			where: {
+				id: req.params.id
+			}
+		}).then((course) => {
+
+			res.render('pages/editCourse', {
+				Courses: course
+			}).catch((err) => {
+				console.log(err)
+			});
+		})
+	},
+	edit: (req, res) => {
+		table.update({
+			Course_name: req.body.C_Name,
+			Course_Duration: req.body.C_dur,
+			Course_Fees: req.body.C_Fees
+
+		}, {
+			where: {
+				id: req.body.id
+			}
+		}).then((course) => {
+			console.log('course update successfully');
+
+			res.redirect('/');
+
+		})
+	},
+	delete: (req, res) => {
+		table.destroy({
+			where: {
+				id: req.params.id
+			}
+
+		}).then(course => {
+			res.redirect('/');
+		}).catch((err) => {
+			console.log(err)
+		});
 	}
 
-};
+
+}

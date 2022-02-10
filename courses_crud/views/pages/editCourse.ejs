@@ -1,53 +1,56 @@
-<!-- <html>
-<!-- include header  -->
-<%- include('../partials/header', { pageTitle: "Add Course :: Course Management" }) %>
-<!-- include header  -->
+ <html>
+ <!-- include header  -->
+ <%- include('../partials/header', { pageTitle: "Add Course :: Course Management" }) %>
+ <!-- include header  -->
 
-<body>
-  <div>
-    <!-- include navbar -->
-    <%- include('../partials/navbar') %>
-    <!-- /include navbar -->
-  </div>
-  <div class="container">
-    <h1>Edit Course</h1>
-  </div>
-  <!-- include footer -->
-  <%- include('../partials/footer') %>
-  <!-- /include footer -->
+ <body>
+   <div>
+     <!-- include navbar -->
+     <%- include('../partials/navbar') %>
+     <!-- /include navbar -->
+   </div>
+   <div class="container">
+     <h1>Edit Course</h1>
 
-  <div class="h2 text-center m-4 text-danger">
-    All Available Courses
-  </div>
+     <!-- include footer -->
+     <%- include('../partials/footer') %>
+     <!-- /include footer -->
 
-  <form method="POST" class="thead-dark" id="editform">
-    <h2>Edit your Course here:</h2>
-    <div class="form-group">
-      <input type='number' name='id'></div>
+     <div class="h2 text-center m-4 text-danger">
+       Edit your Course here
+     </div>
 
-    <div class="form-group">
-      <label for="inputCName">Course-Name</label>
-      <input type="text" name="C_Name" id="inputCName" placeholder="Course-Name" autofocus required>
+     <form method="POST" class="thead-dark" action="/edit" id="editform">
 
-    </div>
-    <div class="form-group">
-      <label for="inputCDuration">Course-Duration</label>
-      <input type="text" name="C_dur" id="inputC_duration" placeholder="Course-Duration" required>
-    </div>
-    <div class="form-group">
-      <label for="inputfees">Course-Fees:</label>
-      <input type="number" name="C_Fees" id="inputC_Fees" placeholder="Course-Fees" required>
-    </div>
+       <div class="form-group">
+         <input type='number' name='id' hidden value='<%=Courses[0].dataValues.id%>'></div>
 
-    <button class="btn btn-success" id="adbtn" class=" text-center" type="submit">Update</button>
-  </form>
-  </div>
-  </form>
+       <div class="form-group">
+         <label for="inputCName">Course-Name</label>
+         <input type="text" name="C_Name" id="inputCName" value='<%=Courses[0].dataValues.Course_name%>'
+           placeholder="Course-Name" autofocus required>
+
+       </div>
+       <div class="form-group">
+         <label for="inputCDuration">Course-Duration</label>
+         <input type="text" name="C_dur" id="inputC_duration" value='<%=Courses[0].dataValues.Course_Duration%>'
+           placeholder="Course-Duration" required>
+       </div>
+       <div class="form-group">
+         <label for="inputfees">Course-Fees:</label>
+         <input type="number" name="C_Fees" id="inputC_Fees" value='<%=Courses[0].dataValues.Course_Fees%>'
+           placeholder="Course-Fees" required>
+       </div>
+
+       <button class="btn btn-success" id="adbtn" class=" text-center" type="submit">Update</button>
+     </form>
+   </div>
+   </div>
 
 
 
 
 
-</body>
+ </body>
 
-</html>
+ </html>

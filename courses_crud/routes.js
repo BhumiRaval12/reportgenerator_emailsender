@@ -14,10 +14,12 @@ router.use(
 
 router.get('/', courseController.index);
 router.get('/add', courseController.add);
-
-router.get('/edit/:id', courseController.edit);
-module.exports = router;
-
-
-
+router.get('/edit/:id', courseController.getEdit);
+router.post('/edit', courseController.edit);
+router.get('/delete/:id', courseController.delete);
 router.post('/insert', courseController.insert);
+
+
+
+
+module.exports = router;
