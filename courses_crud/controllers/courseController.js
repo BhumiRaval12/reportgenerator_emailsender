@@ -58,9 +58,9 @@ module.exports = {
 				id: req.params.id
 			}
 		}).then((course) => {
-
+			let fetch_data = course[0].dataValues
 			res.render('pages/editCourse', {
-				Courses: course
+				Courses: fetch_data
 			}).catch((err) => {
 				console.log(err)
 			});

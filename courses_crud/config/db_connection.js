@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
 
-const sequelize = new Sequelize("webcourse_crud", "web_crud", "Root@456", {
+const sequelize = new Sequelize("bhumir", "bhumir", "GFujeMX3GkN8QwEajXpKTPYUVZpCF7Ht", {
      dialect: "mysql",
-     host: "localhost",
-     port: "3306",
+     host: "15.206.7.200",
+     port: "3310",
 });
 
 
