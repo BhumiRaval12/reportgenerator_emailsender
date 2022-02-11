@@ -15,7 +15,7 @@
 
 a {
     text-decoration: none;
-    font-family: 'PT Sans', sans-serif;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .container{
@@ -73,7 +73,7 @@ a {
 
 #site-main{
     margin-top: 6em;
-    font-family: 'Barlow', sans-serif;
+    font-family:'Times New Roman', Times, serif;
 }
 
 #site-main .container .box-nav > a{
