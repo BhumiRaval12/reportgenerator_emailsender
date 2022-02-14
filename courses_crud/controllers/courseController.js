@@ -53,12 +53,14 @@ module.exports = {
 	// edit 
 
 	getEdit: (req, res) => {
-		table.findAll({
+
+		return table.findOne({
 			where: {
 				id: req.params.id
 			}
 		}).then((course) => {
-			let fetch_data = course[0].dataValues
+			let fetch_data = course.dataValues;
+
 			res.render('pages/editCourse', {
 				Courses: fetch_data
 			}).catch((err) => {

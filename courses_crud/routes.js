@@ -14,10 +14,11 @@ router.use(
 
 router.get('/', courseController.index);
 router.get('/add', courseController.add);
+router.post('/insert', courseController.insert);
 router.get('/edit/:id', courseController.getEdit);
 router.post('/edit', courseController.edit);
 router.get('/delete/:id', courseController.delete);
-router.post('/insert', courseController.insert);
+
 
 
 
