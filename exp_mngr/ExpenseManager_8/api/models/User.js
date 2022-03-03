@@ -1,51 +1,78 @@
-module.exports = {
+var mongoose = require('mongoose');
+bcrypt = require('bcrypt');
+SALT_WORK_FACTOR = 10;
 
-  attributes: {
-    tableName: 'users',
-    attributes: {
-
-      fullName: {
-        type: 'string',
-        required: true,
-        columnName: 'full_name'
-      },
-      email: {
-        type: 'string',
-        required: true,
-        unique: true,
-      },
-      emailStatus: {
-        type: 'string',
-        isIn: ['unconfirmed', 'confirmed'],
-        defaultsTo: 'unconfirmed',
-        columnName: 'email_status'
-      },
-      emailProofToken: {
-        type: 'string',
-        description: 'This will be used in the account verification email',
-        columnName: 'email_proof_token'
-      },
-      emailProofTokenExpiresAt: {
-        type: 'number',
-        description: 'time in milliseconds representing when the emailProofToken will expire',
-        columnName: 'email_proof_token_expires_at'
-      },
-      password: {
-        type: 'string',
-        required: true
-      },
-      passwordResetToken: {
-        type: 'string',
-        description: 'A unique token used to verify the user\'s identity when recovering a password.',
-        columnName: 'password_reset_token',
-      },
-      passwordResetTokenExpiresAt: {
-        type: 'number',
-        description: 'A timestamp representing the moment when this user\'s `passwordResetToken` will expire (or 0 if the user currently has no such token).',
-        example: 1508944074211,
-        columnName: 'password_reset_token_expires_at',
-      },
-
-    },
+var UserSchema = new mongoose.Schema({
+  fullName: {
+    type: String,
+    required: true
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
+}, {
+  timestamps: true
+});
+
+UserSchema.pre('save', function (next) {
+  var user = this;
+  // only hash the password if it has been modified (or is new)
+  if (!user.isModified('password')) {
+    return next();
+  }
+  // generate a salt
+  bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
+    if (err) {
+      return next(err);
+    }
+    // hash the password using our new salt
+    bcrypt.hash(user.password, salt, (err, hash) => {
+      if (err) {
+        return next(err);
+      }
+      // override the cleartext password with the hashed one
+      user.password = hash;
+      next();
+    });
+  });
+});
+
+UserSchema.methods.comparePassword = function (candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    if (err) {
+      return cb(err);
+    }
+    cb(null, isMatch);
+  });
 };
+
+module.exports = mongoose.model('User', UserSchema);
+
+UserSchema.pre('save', function (next) {
+  var user = this;
+  // only hash the password if it has been modified (or is new)
+  if (!user.isModified('password')) {
+    return next();
+  }
+  // generate a salt
+  bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
+    if (err) {
+      return next(err);
+    }
+    // hash the password using our new salt
+    bcrypt.hash(user.password, salt, (err, hash) => {
+      if (err) {
+        return next(err);
+      }
+      // override the cleartext password with the hashed one
+      user.password = hash;
+      next();
+    });
+  });
+});
