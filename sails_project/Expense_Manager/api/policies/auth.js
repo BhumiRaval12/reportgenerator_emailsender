@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
       console.log('secret', userid);
 
       //get user from token
-      req.user = userid; //await User.findOne(userid).select('-password');
+      req.user = userid;
       console.log(req.user);
       return next();
     } catch (error) {

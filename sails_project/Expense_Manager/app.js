@@ -24,6 +24,8 @@
 // Ensure we're in the project directory, so cwd-relative paths work as expected
 // no matter where we actually lift from.
 // > Note: This is not required in order to lift, but it is a convenient default.
+require('dotenv').config();
+
 process.chdir(__dirname);
 
 
@@ -34,6 +36,7 @@ var rc;
 try {
   sails = require('sails');
   rc = require('sails/accessible/rc');
+  console.log(process.env);
 } catch (err) {
   console.error('Encountered an error when attempting to require(\'sails\'):');
   console.error(err.stack);
@@ -47,7 +50,7 @@ try {
   console.error('not run this file (`app.js`), but it will do exactly the same thing.');
   console.error('(It even uses your app directory\'s local Sails install, if possible.)');
   return;
-}//-•
+} //-•
 
 
 // Start server

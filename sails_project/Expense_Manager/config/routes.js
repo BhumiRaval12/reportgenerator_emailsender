@@ -12,11 +12,11 @@ module.exports.routes = {
 
 
   //public routes
-  'POST/register': {
-    action: 'User/createAccount'
+  'POST /register': {
+    action: 'Users/createAccount'
   },
-  'POST/login': {
-    action: 'User/login'
+  'POST /login': {
+    action: 'Users/login'
   }
 
 };

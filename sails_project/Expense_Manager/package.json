@@ -7,6 +7,7 @@
   "dependencies": {
     "@sailshq/lodash": "^3.10.3",
     "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb-core": "^3.2.7",
     "sails": "^1.5.2",

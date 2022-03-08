@@ -9,6 +9,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
+
+
+
+
 module.exports = {
   createAccount: async (req, res) => {
     let {
@@ -16,7 +20,8 @@ module.exports = {
       email,
       password
     } = req.body;
-    tc = (tc === 'true') ? true : false;
+    // let tc = true;
+    // tc = (tc === 'true') ? true : false;
     const user = await Users.find({
       email: email
     }).limit(1);
@@ -27,40 +32,34 @@ module.exports = {
       });
 
     } else {
-      if (name && email && password && passwordconf && tc) {
-        const salt = await bcrypt.gensalt(10);
+      if (name && email && password) {
+        const salt = await bcrypt.genSalt(10);
         const hashpassword = await bcrypt.hash(password, salt);
 
         try {
-          await User.create({
+          await Users.create({
             name: name,
             email: email,
-            password: hashpassword,
-            tc: tc
+            password: hashpassword
+
 
           });
           //await doc.save();
-          const saveduser = await User.findOne({
+          const saveduser = await Users.findOne({
             email: email
           });
 
-          //genearte jwt
-          const token = jwt.sign({
-              userid: saveduser.id
-            },
-            process.env.JWT_SECRET_KEY, {
-              expiresIn: '1h'
-            }
-          );
+
 
           res
             .status(201)
             .send({
               status: 'success',
               message: 'Registration successfully..',
-              token: token,
+
             });
         } catch (e) {
+          console.log(e);
           res.send({
             status: 'failed',
             message: 'Unable to Register',
@@ -86,7 +85,7 @@ module.exports = {
         password
       } = req.body;
       if (email && password) {
-        const user = await User.findOne({
+        const user = await Users.findOne({
           email: email
         });
         if (user !== null) {
