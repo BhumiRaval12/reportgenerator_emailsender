@@ -16,6 +16,7 @@ module.exports = {
       email,
       password
     } = req.body;
+    tc = (tc === 'true') ? true : false;
     const user = await Users.find({
       email: email
     }).limit(1);
@@ -26,7 +27,7 @@ module.exports = {
       });
 
     } else {
-      if (name && email && password) {
+      if (name && email && password && passwordconf && tc) {
         const salt = await bcrypt.gensalt(10);
         const hashpassword = await bcrypt.hash(password, salt);
 
@@ -35,6 +36,7 @@ module.exports = {
             name: name,
             email: email,
             password: hashpassword,
+            tc: tc
 
           });
           //await doc.save();
@@ -43,8 +45,12 @@ module.exports = {
           });
 
           //genearte jwt
-          const token = jwt.sign({userid: saveduser.id},
-            process.env.JWT_SECRET_KEY, { expiresIn: '1h'}
+          const token = jwt.sign({
+              userid: saveduser.id
+            },
+            process.env.JWT_SECRET_KEY, {
+              expiresIn: '1h'
+            }
           );
 
           res
@@ -54,8 +60,13 @@ module.exports = {
               message: 'Registration successfully..',
               token: token,
             });
-        }catch(error){
-             
+        } catch (e) {
+          res.send({
+            status: 'failed',
+            message: 'Unable to Register',
+
+          });
+
         }
       } else {
         res.send({
@@ -68,5 +79,56 @@ module.exports = {
   },
 
 
+  login: async (req, res) => {
+    try {
+      const {
+        email,
+        password
+      } = req.body;
+      if (email && password) {
+        const user = await User.findOne({
+          email: email
+        });
+        if (user !== null) {
+          const ismatch = await bcrypt.compare(password, user.password);
+          if (user.email === email && ismatch) {
+            //genrate token
+            const token = jwt.sign({
+                userid: user._id
+              },
+              process.env.JWT_SECRET_KEY, {
+                expiresIn: '5d'
+              }
+            );
+            res.send({
+              status: 'success',
+              message: 'Login Success',
+              token: token,
+            });
+          } else {
+            res.send({
+              status: 'failed',
+              message: 'Email or Password is not valid',
+            });
+          }
+        } else {
+          res.send({
+            status: 'failed',
+            message: 'You are not registerd user'
+          });
+        }
+      } else {
+        res.send({
+          status: 'failed',
+          message: 'All field are required..'
+        });
+      }
+    } catch (error) {
+      res.send({
+        status: 'failed',
+        message: 'Unable to login'
+      });
+    }
+  },
 
 };

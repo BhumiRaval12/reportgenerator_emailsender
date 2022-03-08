@@ -10,11 +10,13 @@
 
 module.exports.routes = {
 
-  '/': {
-    view: 'pages/homepage'
-  },
 
   //public routes
-  'POST /register': 'UserController.createAccount',
+  'POST/register': {
+    action: 'User/createAccount'
+  },
+  'POST/login': {
+    action: 'User/login'
+  }
 
 };

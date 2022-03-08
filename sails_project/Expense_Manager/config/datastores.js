@@ -14,12 +14,8 @@
  */
 
 module.exports.datastores = {
-
   default: {
     adapter: 'sails-mongo',
-    url: 'mongodb+srv://BhumiR123:Zignuts@456@cluster0.aavoj.mongodb.net/ExpenseManager?authSource=admin&replicaSet=atlas-wep1k4-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true',
-
+    url: 'mongodb+srv://BhumiR123:Zignuts456@cluster0.aavoj.mongodb.net/Expense_Manager?retryWrites=true&w=majority',
   },
-
-
 };
