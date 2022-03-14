@@ -4,7 +4,7 @@
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
-
+//y
 module.exports = {
 
   attributes: {
@@ -22,8 +22,16 @@ module.exports = {
       type: 'string',
       required: true,
 
+    },
+    isLogin: {
+      type: 'boolean',
+      defaultsTo: false,
+
     }
 
-  },
+
+
+
+  }
 
 };

@@ -13,10 +13,14 @@ module.exports.routes = {
 
   //public routes
   'POST /register': {
-    action: 'Users/createAccount'
+    action: 'User/createAccount'
   },
   'POST /login': {
-    action: 'Users/login'
-  }
+    action: 'User/login'
+  },
+  'GET /logout/:userId': {
+    action: 'User/logout'
+  },
+
 
 };

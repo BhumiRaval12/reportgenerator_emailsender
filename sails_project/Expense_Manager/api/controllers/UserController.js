@@ -9,10 +9,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-
-
-
-
 module.exports = {
   createAccount: async (req, res) => {
     let {
@@ -20,44 +16,34 @@ module.exports = {
       email,
       password
     } = req.body;
-    // let tc = true;
-    // tc = (tc === 'true') ? true : false;
-    const user = await Users.find({
+    const user = await User.find({
       email: email
     }).limit(1);
     if (user.length >= 1) {
       res.send({
         status: 'failed',
-        message: 'Email already exists'
+        message: 'Already exists'
       });
 
     } else {
       if (name && email && password) {
         const salt = await bcrypt.genSalt(10);
         const hashpassword = await bcrypt.hash(password, salt);
-
+        console.log(hashpassword);
         try {
-          await Users.create({
+          await User.create({
             name: name,
             email: email,
             password: hashpassword
-
-
-          });
-          //await doc.save();
-          const saveduser = await Users.findOne({
+          }).fetch();
+          const existsUser = await User.findOne({
             email: email
           });
+          res.status(201).send({
+            status: 'success',
+            message: 'Registration successfully..',
 
-
-
-          res
-            .status(201)
-            .send({
-              status: 'success',
-              message: 'Registration successfully..',
-
-            });
+          });
         } catch (e) {
           console.log(e);
           res.send({
@@ -85,7 +71,7 @@ module.exports = {
         password
       } = req.body;
       if (email && password) {
-        const user = await Users.findOne({
+        const user = await User.findOne({
           email: email
         });
         if (user !== null) {
@@ -103,6 +89,12 @@ module.exports = {
               status: 'success',
               message: 'Login Success',
               token: token,
+              userDetails: user
+            });
+            await User.update({
+              email: email
+            }).set({
+              isLogin: true
             });
           } else {
             res.send({
@@ -123,11 +115,32 @@ module.exports = {
         });
       }
     } catch (error) {
+      console.log(error);
       res.send({
         status: 'failed',
         message: 'Unable to login'
       });
     }
   },
+  logout: async (req, res) => {
+    try {
+      await User.update({
+        id: req.params.id
+      }).set({
+        isLogin: false
+      });
+      res.send({
+        message: 'Logout Success'
+      });
+
+    } catch (e) {
+      console.log(e);
+      res.send({
+        status: 'failed',
+        message: 'Unable to logout'
+      });
+
+    }
+  }
 
 };
