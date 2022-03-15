@@ -21,6 +21,16 @@ module.exports.routes = {
   'GET /logout/:userId': {
     action: 'User/logout'
   },
+  'GET /Account': {
+    action: 'User/Account'
+  },
+  'POST /Account/addAccount': {
+    action: 'User/addAccount'
+  },
+  'PATCH /editAccountName': {
+    action: 'User/editAccountName'
+  }
+
 
 
 };

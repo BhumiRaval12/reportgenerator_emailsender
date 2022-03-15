@@ -44,6 +44,7 @@ module.exports = {
             message: 'Registration successfully..',
 
           });
+
         } catch (e) {
           console.log(e);
           res.send({
@@ -96,6 +97,12 @@ module.exports = {
             }).set({
               isLogin: true
             });
+            req.app.locals.name = user.name;
+            req.app.locals.email = user.email;
+            req.app.locals.id = user.id;
+            console.log(req.app.locals);
+
+
           } else {
             res.send({
               status: 'failed',
@@ -141,6 +148,42 @@ module.exports = {
       });
 
     }
+  },
+  Account: async (req, res) => {
+    console.log(req.app.locals.id);
+    const account = await Account.find({
+      Members: req.app.locals.id
+    });
+
+    res.send({
+      Accounts: account
+    });
+    sails.log(account);
+
+
+
+
+  },
+
+  addAccount: async (req, res) => {
+    console.log(req.body);
+    console.log(req.app.locals.id);
+    const account = await Account.create({
+      Accountname: req.body.Accountname,
+      Members: req.app.locals.id,
+      Users: req.app.locals.id
+
+    });
+    res.send({
+      message: 'Account Added Successfully'
+    });
+  },
+  editAccountName: async (req, res) => {
+
+
   }
+
+
+
 
 };

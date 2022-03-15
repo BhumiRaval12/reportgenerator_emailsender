@@ -27,11 +27,28 @@ module.exports = {
       type: 'boolean',
       defaultsTo: false,
 
+    },
+    Accounts: {
+      collection: 'account',
+      via: 'Users',
+      through: 'UserAccount'
+    },
+
+  },
+  afterCreate: async function (record, proceed) {
+    try {
+      let result = await Account.create({
+        Users: record.id,
+        Accountname: 'default',
+        Balance: 0,
+        Members: record.id,
+      }).fetch();
+      console.log(result);
+      return proceed();
+
+    } catch (err) {
+      console.log(err);
     }
-
-
-
-
-  }
+  },
 
 };
