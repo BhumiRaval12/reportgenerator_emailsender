@@ -10,6 +10,8 @@ const jwt = require('jsonwebtoken');
 
 
 module.exports = {
+
+  //For creating new account
   createAccount: async (req, res) => {
     let {
       name,
@@ -64,7 +66,7 @@ module.exports = {
     }
   },
 
-
+  //For user login
   login: async (req, res) => {
     try {
       const {
@@ -86,11 +88,9 @@ module.exports = {
                 expiresIn: '5d'
               }
             );
-            res.send({
-              status: 'success',
-              message: 'Login Success',
-              token: token,
-              userDetails: user
+
+            await User.update({}).set({
+              isLogin: false
             });
             await User.update({
               email: email
@@ -101,7 +101,12 @@ module.exports = {
             req.app.locals.email = user.email;
             req.app.locals.id = user.id;
             console.log(req.app.locals);
-
+            res.send({
+              status: 'success',
+              message: 'Login Success',
+              token: token,
+              userDetails: user
+            });
 
           } else {
             res.send({
@@ -129,6 +134,8 @@ module.exports = {
       });
     }
   },
+
+  //For user logout
   logout: async (req, res) => {
     try {
       await User.update({
@@ -149,6 +156,8 @@ module.exports = {
 
     }
   },
+
+  //To get all accounts
   Account: async (req, res) => {
     console.log(req.app.locals.id);
     const account = await Account.find({
@@ -165,6 +174,7 @@ module.exports = {
 
   },
 
+  //To add your new account
   addAccount: async (req, res) => {
     console.log(req.body);
     console.log(req.app.locals.id);
@@ -178,9 +188,29 @@ module.exports = {
       message: 'Account Added Successfully'
     });
   },
+
+  //To edit your account name
   editAccountName: async (req, res) => {
+    await Account.update({
+      id: req.params.accountId,
 
+    }).set({
+      Accountname: req.body.Accountname
+    });
+    res.send({
+      message: 'Account Name Updated succesfully..'
+    });
 
+  },
+
+  //To Delete your account
+  deleteAccountName: async (req, res) => {
+    await Account.destroy({
+      id: req.params.accountId,
+    });
+    res.send({
+      message: 'Account deleted succesfully'
+    });
   }
 
 

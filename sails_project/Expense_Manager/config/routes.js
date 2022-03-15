@@ -27,8 +27,12 @@ module.exports.routes = {
   'POST /Account/addAccount': {
     action: 'User/addAccount'
   },
-  'PATCH /editAccountName': {
+  'PATCH /editAccountName/:accountId': {
     action: 'User/editAccountName'
+  },
+  'DELETE /deleteAccountName/:accountId': {
+    action: 'User/deleteAccountName'
+
   }
 
 
