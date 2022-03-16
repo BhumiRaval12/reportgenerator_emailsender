@@ -21,8 +21,8 @@ module.exports.routes = {
   'GET /logout/:userId': {
     action: 'User/logout'
   },
-  'GET /Account': {
-    action: 'User/Account'
+  'GET /getAccounts': {
+    action: 'User/getAccounts'
   },
   'POST /Account/addAccount': {
     action: 'User/addAccount'
@@ -32,8 +32,17 @@ module.exports.routes = {
   },
   'DELETE /deleteAccountName/:accountId': {
     action: 'User/deleteAccountName'
-
+  },
+  'POST /addMember': {
+    action: 'User/addMember'
+  },
+  'POST /addTransaction': {
+    action: 'User/addTransaction'
+  },
+  'POST /getAllTransaction': {
+    action: 'User/getAllTransaction'
   }
+
 
 
 

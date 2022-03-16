@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
+
 module.exports = {
 
   //For creating new account
@@ -89,9 +90,7 @@ module.exports = {
               }
             );
 
-            await User.update({}).set({
-              isLogin: false
-            });
+
             await User.update({
               email: email
             }).set({
@@ -158,19 +157,41 @@ module.exports = {
   },
 
   //To get all accounts
-  Account: async (req, res) => {
+  getAccounts: async (req, res) => {
     console.log(req.app.locals.id);
-    const account = await Account.find({
-      Members: req.app.locals.id
-    });
+
+    const user = await User.find({
+      id: req.app.locals.id
+    }).populate('Accounts');
+    console.log(user);
+    // const account = await Account.find({
+    //   Members: req.app.locals.id,
+
+    // });
 
     res.send({
-      Accounts: account
+      Accounts: user[0].Accounts
     });
-    sails.log(account);
+    // sails.log(account);
+  },
 
+  //To add Member to your account
+  addMember: async (req, res) => {
+    const user = await User.find({
+      email: req.body.email
+    });
+    console.log(user);
 
-
+    if (user.length > 0) {
+      await Account.addToCollection(req.body.accountId, 'Users', user[0].id);
+      res.send({
+        message: 'Member added successfully'
+      });
+    } else {
+      res.send({
+        message: 'user with this email does not exist'
+      });
+    }
 
   },
 
@@ -211,8 +232,35 @@ module.exports = {
     res.send({
       message: 'Account deleted succesfully'
     });
-  }
+  },
 
+  addTransaction: async (req, res) => {
+    // when you write this 
+    const transaction = await Transaction.create({
+      transactionType: req.body.transactionType,
+      ammount: req.body.ammount
+
+    });
+
+    res.send({
+      message: 'Transaction Added Successfully'
+    });
+  },
+
+  getAllTransaction: async (req, res) => {
+    const transaction = await Transaction.find({
+      Transaction: req.body.transaction
+    }).sort([{createdAt: 'DES'}]);
+
+
+    res.send({
+      Transaction: transaction
+    });
+
+
+
+
+  }
 
 
 
