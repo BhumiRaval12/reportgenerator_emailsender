@@ -41,6 +41,12 @@ module.exports.routes = {
   },
   'POST /getAllTransaction': {
     action: 'User/getAllTransaction'
+  },
+  'PATCH /editTransaction': {
+    action: 'User/editTransaction'
+  },
+  'DELETE /deleteTransaction/:transactionId': {
+    action: 'User/deleteTransaction'
   }
 
 

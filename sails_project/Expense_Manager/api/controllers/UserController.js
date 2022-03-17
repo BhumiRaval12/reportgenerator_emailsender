@@ -234,11 +234,16 @@ module.exports = {
     });
   },
 
+
+  //To Add Transaction 
   addTransaction: async (req, res) => {
-    // when you write this 
+
     const transaction = await Transaction.create({
       transactionType: req.body.transactionType,
-      ammount: req.body.ammount
+      Category: req.body.Category,
+      ammount: req.body.ammount,
+     
+
 
     });
 
@@ -247,19 +252,43 @@ module.exports = {
     });
   },
 
+  //get all Transaction list
   getAllTransaction: async (req, res) => {
     const transaction = await Transaction.find({
       Transaction: req.body.transaction
-    }).sort([{createdAt: 'DES'}]);
+    }).sort('createdAt DESC');
 
 
     res.send({
       Transaction: transaction
     });
+  },
 
+  //To edit your Trasaction 
+  editTransaction: async (req, res) => {
+    await Transaction.update({
+      id: req.params.transactionId,
 
+    }).set({
+      transactionType: req.body.transactionType,
+      ammount: req.body.ammount,
+      Category: req.body.Category
 
+    });
+    res.send({
+      message: 'Your Transaction Updated succesfully..'
+    });
 
+  },
+
+  //To Delete Transaction 
+  deleteTransaction: async (req, res) => {
+    await Transaction.destroy({
+      id: req.params.transactionId,
+    });
+    res.send({
+      message: 'Transaction deleted succesfully'
+    });
   }
 
 
