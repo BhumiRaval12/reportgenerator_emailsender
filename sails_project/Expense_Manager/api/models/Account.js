@@ -18,5 +18,9 @@ module.exports = {
       via: 'Accounts',
       through: 'UserAccount',
     },
+    Transaction: {
+      collection: 'Transaction',
+      via: 'account'
+    },
   }
 };

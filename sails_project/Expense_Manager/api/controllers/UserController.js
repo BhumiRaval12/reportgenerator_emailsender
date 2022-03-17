@@ -241,40 +241,74 @@ module.exports = {
     const transaction = await Transaction.create({
       transactionType: req.body.transactionType,
       Category: req.body.Category,
-      ammount: req.body.ammount,
-     
+      amount: req.body.amount,
+      account: req.body.accountId
+
+    });
 
 
+    const account = await Account.find({
+      id: req.body.accountId
+    });
+    
+    let Balance = account[0].Balance;
+    
+   
+    if (req.body.transactionType === 'Income') {
+      Balance = Balance + Number(req.body.amount);
+    } else {
+      Balance = Balance - Number(req.body.amount);
+    }
+    console.log(Balance);
+    
+    await Account.update({
+      id: req.body.accountId
+    }).set({
+      Balance: Balance
     });
 
     res.send({
       message: 'Transaction Added Successfully'
     });
+
   },
 
   //get all Transaction list
   getAllTransaction: async (req, res) => {
+
+    const account = await Account.find({
+      id: req.body.accountId
+    }).populate('Transaction');
+
+    console.log(account[0].Transaction);
+    console.log(account);
     const transaction = await Transaction.find({
       Transaction: req.body.transaction
     }).sort('createdAt DESC');
 
 
     res.send({
-      Transaction: transaction
+      Transaction: account[0].Transaction
     });
   },
 
   //To edit your Trasaction 
   editTransaction: async (req, res) => {
     await Transaction.update({
-      id: req.params.transactionId,
+      id: req.body.transactionId,
 
     }).set({
+
       transactionType: req.body.transactionType,
-      ammount: req.body.ammount,
-      Category: req.body.Category
+      amount: req.body.amount,
+      Category: req.body.Category,
+
 
     });
+
+    // Account.update({
+    //   id: req.body.accountId
+    // }).set({Balance:});
     res.send({
       message: 'Your Transaction Updated succesfully..'
     });

@@ -10,9 +10,14 @@ module.exports = {
       type: 'String',
       required: true
     },
-    ammount: {
+ 
+    amount: {
       type: 'number',
       required: true
+    },
+    account: {
+      model: 'account'
     }
+
   }
 };
