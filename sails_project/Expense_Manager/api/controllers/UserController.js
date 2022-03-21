@@ -293,6 +293,45 @@ module.exports = {
 
   //To edit your Trasaction 
   editTransaction: async (req, res) => {
+    const transaction = await Transaction.find({
+      id: req.body.transactionId
+    });
+
+    const account = await Account.find({
+      id: req.body.accountId
+    });
+
+    let Balance = 0;
+    if (transaction.transactionType === 'Income') {
+      Balance = account.Balance - transaction.amount
+      await Account.update({
+        id: req.body.accountId
+      }).set({
+        Balance: Balance
+      });
+
+    } else if (transaction.transactionType === 'Expense') {
+      Balance = account.Balance + transaction.amount
+      await Account.update({
+        id: req.body.accountId
+      }).set({
+        Balance: Balance
+      });
+    }
+
+    if (req.body.transactionType === 'Income') {
+      Balance = Balance + Number(req.body.amount);
+    } else if (req.body.transactionType === 'Expense') {
+      Balance = Balance - Number(req.body.amount);
+    }
+    console.log('Balance', Balance);
+
+    await Account.update({
+      id: req.body.accountId
+    }).set({
+      Balance: Balance
+    });
+
     await Transaction.update({
       id: req.body.transactionId,
 
@@ -304,18 +343,6 @@ module.exports = {
 
 
     });
-    let Balance = 0;
-    if (req.body.transactionType === 'Income') {
-      Balance = Balance + Number(req.body.amount);
-    } else if (req.body.transactionType === 'Expense') {
-      Balance = Balance - Number(req.body.amount);
-    }
-    await Account.update({
-      id: req.body.accountId
-    }).set({
-      Balance: Balance
-    });
-
 
     res.send({
       message: 'Your Transaction Updated succesfully..'
