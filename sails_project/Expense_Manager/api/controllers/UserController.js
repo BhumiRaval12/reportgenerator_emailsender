@@ -250,17 +250,17 @@ module.exports = {
     const account = await Account.find({
       id: req.body.accountId
     });
-    
+
     let Balance = account[0].Balance;
-    
-   
+
+
     if (req.body.transactionType === 'Income') {
       Balance = Balance + Number(req.body.amount);
     } else {
       Balance = Balance - Number(req.body.amount);
     }
     console.log(Balance);
-    
+
     await Account.update({
       id: req.body.accountId
     }).set({
@@ -286,7 +286,6 @@ module.exports = {
       Transaction: req.body.transaction
     }).sort('createdAt DESC');
 
-
     res.send({
       Transaction: account[0].Transaction
     });
@@ -305,10 +304,19 @@ module.exports = {
 
 
     });
+    let Balance = 0;
+    if (req.body.transactionType === 'Income') {
+      Balance = Balance + Number(req.body.amount);
+    } else if (req.body.transactionType === 'Expense') {
+      Balance = Balance - Number(req.body.amount);
+    }
+    await Account.update({
+      id: req.body.accountId
+    }).set({
+      Balance: Balance
+    });
 
-    // Account.update({
-    //   id: req.body.accountId
-    // }).set({Balance:});
+
     res.send({
       message: 'Your Transaction Updated succesfully..'
     });
@@ -319,6 +327,16 @@ module.exports = {
   deleteTransaction: async (req, res) => {
     await Transaction.destroy({
       id: req.params.transactionId,
+    });
+    if (req.body.transactionType === 'Income') {
+      Balance = Balance + Number(req.body.amount);
+    } else if (req.body.transactionType === 'Expense') {
+      Balance = Balance - Number(req.body.amount);
+    }
+    await Account.update({
+      id: req.body.accountId
+    }).set({
+      Balance: Balance
     });
     res.send({
       message: 'Transaction deleted succesfully'
