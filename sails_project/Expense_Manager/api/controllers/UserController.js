@@ -7,7 +7,7 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+let Validator = require('validatorjs');
 
 
 module.exports = {
@@ -19,17 +19,29 @@ module.exports = {
       email,
       password
     } = req.body;
-    const user = await User.find({
-      email: email
-    }).limit(1);
-    if (user.length >= 1) {
-      res.send({
-        status: 'failed',
-        message: 'Already exists'
-      });
 
-    } else {
-      if (name && email && password) {
+    let validator = new Validator({
+      name: name,
+      email: email,
+      password: password
+    }, {
+      name: 'required|min:4',
+      email: 'required|email',
+      password: 'required|min:8'
+    });
+
+    async function passes() {
+      // Validation passed
+      const user = await User.find({
+        email: email
+      }).limit(1);
+      if (user.length >= 1) {
+        res.send({
+          status: 'failed',
+          message: 'Already exists'
+        });
+
+      } else {
         const salt = await bcrypt.genSalt(10);
         const hashpassword = await bcrypt.hash(password, salt);
         console.log(hashpassword);
@@ -44,7 +56,7 @@ module.exports = {
           });
           res.status(201).send({
             status: 'success',
-            message: 'Registration successfully..',
+            message: 'Successfully Registered......',
 
           });
 
@@ -57,30 +69,60 @@ module.exports = {
           });
 
         }
-      } else {
-        res.send({
-          status: 'failed',
-          message: 'password and confirm password are not match!..',
-        });
-      }
 
+      }
     }
+
+    function fails() {
+      // validator.errors.first('username');
+      // console.log(validator.errors.all());
+      let errors = validator.errors.all();
+      let message = '';
+      for (const error in errors) {
+        message += errors[error];
+      }
+      console.log(message);
+      res.send({
+        status: 'invalid data',
+        message: message,
+
+      });
+    }
+
+    validator.checkAsync(passes, fails);
+
+
   },
+
+
 
   //For user login
   login: async (req, res) => {
     try {
-      const {
-        email,
-        password
-      } = req.body;
-      if (email && password) {
+
+      const email = req.body.email;
+      const password = req.body.password;
+
+      console.log(password);
+
+      let validator = new Validator({
+        email: email,
+        password: password
+      }, {
+        email: 'required|email',
+        password: 'required|min:8'
+      });
+
+      async function passes() {
+        // Validation passed
+        // show me
         const user = await User.findOne({
           email: email
         });
-        if (user !== null) {
+        console.log(user);
+        if (user !== undefined) {
           const ismatch = await bcrypt.compare(password, user.password);
-          if (user.email === email && ismatch) {
+          if (ismatch) {
             //genrate token
             const token = jwt.sign({
                 userid: user._id
@@ -91,20 +133,23 @@ module.exports = {
             );
 
 
-            await User.update({
+            const updatedUser = await User.update({
               email: email
             }).set({
               isLogin: true
-            });
+            }).fetch();
+
             req.app.locals.name = user.name;
             req.app.locals.email = user.email;
             req.app.locals.id = user.id;
             console.log(req.app.locals);
+
             res.send({
               status: 'success',
               message: 'Login Success',
               token: token,
-              userDetails: user
+              userDetails: updatedUser
+              // becoz here we are passing user from
             });
 
           } else {
@@ -119,12 +164,24 @@ module.exports = {
             message: 'You are not registerd user'
           });
         }
-      } else {
+      }
+
+      function fails() {
+        let errors = validator.errors.all();
+        let message = '';
+        for (const error in errors) {
+          message += errors[error];
+        }
+
         res.send({
-          status: 'failed',
-          message: 'All field are required..'
+          status: 'invalid data',
+          message: message
         });
       }
+
+      validator.checkAsync(passes, fails);
+
+
     } catch (error) {
       console.log(error);
       res.send({
@@ -133,6 +190,9 @@ module.exports = {
       });
     }
   },
+
+
+
 
   //For user logout
   logout: async (req, res) => {
@@ -156,19 +216,23 @@ module.exports = {
     }
   },
 
-  //To get all accounts
-  getAccounts: async (req, res) => {
+
+
+  //To add your new account
+  addAccount: async (req, res) => {
+    console.log(req.body);
     console.log(req.app.locals.id);
+    const account = await Account.create({
+      Accountname: req.body.Accountname,
+      Members: req.app.locals.id,
+      Users: req.app.locals.id
 
-    const user = await User.find({
-      id: req.app.locals.id
-    }).populate('Accounts');
-    console.log(user);
-    res.send({
-      Accounts: user[0].Accounts
     });
-
+    res.send({
+      message: 'Account Added Successfully'
+    });
   },
+
 
   //To add Member to your account
   addMember: async (req, res) => {
@@ -190,20 +254,23 @@ module.exports = {
 
   },
 
-  //To add your new account
-  addAccount: async (req, res) => {
-    console.log(req.body);
-    console.log(req.app.locals.id);
-    const account = await Account.create({
-      Accountname: req.body.Accountname,
-      Members: req.app.locals.id,
-      Users: req.app.locals.id
 
-    });
+
+  //To get all accounts
+  getAccounts: async (req, res) => {
+    console.log(req.app.locals.id);
+
+    const user = await User.find({
+      id: req.app.locals.id
+    }).populate('Accounts');
+    console.log(user);
     res.send({
-      message: 'Account Added Successfully'
+      Accounts: user[0].Accounts
     });
+
   },
+
+
 
   //To edit your account name
   editAccountName: async (req, res) => {
@@ -219,8 +286,10 @@ module.exports = {
 
   },
 
+
+
   //To Delete your account
-  deleteAccountName: async (req, res) => {
+  deleteAccount: async (req, res) => {
     await Account.destroy({
       id: req.params.accountId,
     });
@@ -228,6 +297,7 @@ module.exports = {
       message: 'Account deleted succesfully'
     });
   },
+
 
 
   //To Add Transaction 
@@ -265,6 +335,8 @@ module.exports = {
 
   },
 
+
+
   //get all Transaction list
   getAllTransaction: async (req, res) => {
 
@@ -283,18 +355,18 @@ module.exports = {
     });
   },
 
+
+
   //To edit your Trasaction 
   editTransaction: async (req, res) => {
     const transaction = await Transaction.find({
       id: req.body.transactionId,
     });
-    console.log('here is  array');
-    console.log(transaction);
+
     const account = await Account.find({
       id: req.body.accountId,
     });
-    console.log('here is  array');
-    console.log(account);
+
     let Balance = 0;
     if (transaction[0].transactionType === 'Income') {
       Balance = account[0].Balance - transaction[0].amount;
@@ -334,6 +406,8 @@ module.exports = {
       message: 'Your Transaction Updated succesfully..',
     });
   },
+
+
 
   //To Delete Transaction 
   deleteTransaction: async (req, res) => {

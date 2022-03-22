@@ -19,8 +19,17 @@ module.exports.policies = {
 
   // '*': true,
   UserController: {
-    'Account': 'auth'
 
-  }
+    'addAccount': 'auth',
+    'getAccounts': 'auth',
+    'addMember': 'auth',
+    'editAccount': 'auth',
+    'deleteAccount': 'auth',
+    'addTransaction': 'auth',
+    'getAllTransaction': 'auth',
+    'editTransaction': 'auth',
+    'deleteTransaction': 'auth'
+  },
+
 
 };
