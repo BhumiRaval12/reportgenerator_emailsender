@@ -10,7 +10,6 @@ module.exports = {
       type: 'String',
       required: true
     },
- 
     amount: {
       type: 'number',
       required: true

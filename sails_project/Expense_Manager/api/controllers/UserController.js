@@ -164,15 +164,10 @@ module.exports = {
       id: req.app.locals.id
     }).populate('Accounts');
     console.log(user);
-    // const account = await Account.find({
-    //   Members: req.app.locals.id,
-
-    // });
-
     res.send({
       Accounts: user[0].Accounts
     });
-    // sails.log(account);
+
   },
 
   //To add Member to your account
@@ -246,14 +241,11 @@ module.exports = {
 
     });
 
-
     const account = await Account.find({
       id: req.body.accountId
     });
 
     let Balance = account[0].Balance;
-
-
     if (req.body.transactionType === 'Income') {
       Balance = Balance + Number(req.body.amount);
     } else {
@@ -294,60 +286,53 @@ module.exports = {
   //To edit your Trasaction 
   editTransaction: async (req, res) => {
     const transaction = await Transaction.find({
-      id: req.body.transactionId
+      id: req.body.transactionId,
     });
-
+    console.log('here is  array');
+    console.log(transaction);
     const account = await Account.find({
-      id: req.body.accountId
+      id: req.body.accountId,
     });
-
+    console.log('here is  array');
+    console.log(account);
     let Balance = 0;
-    if (transaction.transactionType === 'Income') {
-      Balance = account.Balance - transaction.amount
+    if (transaction[0].transactionType === 'Income') {
+      Balance = account[0].Balance - transaction[0].amount;
       await Account.update({
-        id: req.body.accountId
+        id: req.body.accountId,
       }).set({
-        Balance: Balance
+        Balance: Balance,
       });
-
-    } else if (transaction.transactionType === 'Expense') {
-      Balance = account.Balance + transaction.amount
+    } else if (transaction[0].transactionType === 'Expense') {
+      Balance = account[0].Balance + transaction[0].amount;
       await Account.update({
-        id: req.body.accountId
+        id: req.body.accountId,
       }).set({
-        Balance: Balance
+        Balance: Balance,
       });
     }
-
+    console.log('balance after removing effect og transaction', Balance);
     if (req.body.transactionType === 'Income') {
       Balance = Balance + Number(req.body.amount);
     } else if (req.body.transactionType === 'Expense') {
       Balance = Balance - Number(req.body.amount);
     }
-    console.log('Balance', Balance);
-
+    console.log('Balance after 2nd phase', Balance);
     await Account.update({
-      id: req.body.accountId
+      id: req.body.accountId,
     }).set({
-      Balance: Balance
+      Balance: Balance,
     });
-
     await Transaction.update({
       id: req.body.transactionId,
-
     }).set({
-
       transactionType: req.body.transactionType,
       amount: req.body.amount,
       Category: req.body.Category,
-
-
     });
-
     res.send({
-      message: 'Your Transaction Updated succesfully..'
+      message: 'Your Transaction Updated succesfully..',
     });
-
   },
 
   //To Delete Transaction 
