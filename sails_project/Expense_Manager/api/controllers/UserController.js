@@ -115,7 +115,7 @@ module.exports = {
 
       async function passes() {
         // Validation passed
-       
+
         const user = await User.findOne({
           email: email
         });
@@ -149,7 +149,6 @@ module.exports = {
               message: 'Login Success',
               token: token,
               userDetails: updatedUser
-              // becoz here we are passing user from
             });
 
           } else {
