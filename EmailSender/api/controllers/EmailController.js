@@ -26,7 +26,7 @@ module.exports = {
     });
 
     //schedule for 10AM
-    cron.schedule("* * * * * *", async () => {
+    cron.schedule("0 10 * * *", async () => {
       let subject = "Please log in into the system";
 
       await Email.create({
