@@ -11,20 +11,10 @@ module.exports = {
   CreateEmployee: async (req, res) => {
     let { email, fname, lname } = req.body;
 
-    let validator = new Validator(
-      {
-        email: email,
-        fname: fname,
-        lname: lname,
-      },
-      {
-        email: "required|email",
-        fname: "required|min:2",
-        lname: "required|min:2",
-      }
-    );
+    const validate = validator(email, fname, lname);
+    console.log(validate);
 
-    async function passes() {
+    if (validate === true) {
       // Validation passed
       const employee = await Employee.find({
         email: email,
@@ -55,10 +45,8 @@ module.exports = {
           message: "Unable to create",
         });
       }
-    }
-
-    function fails() {
-      let errors = validator.errors.all();
+    } else {
+      let errors = validate;
       let message = "";
       for (const error in errors) {
         message += errors[error];
@@ -70,6 +58,37 @@ module.exports = {
       });
     }
 
-    validator.checkAsync(passes, fails);
+    function validator(email, fname, lname) {
+      let isValid
+      let errors
+      let validator = new Validator(
+        {
+          email: email,
+          fname: fname,
+          lname: lname,
+        },
+        {
+          email: "required|email",
+          fname: "required|min:2",
+          lname: "required|min:2",
+        }
+      );
+
+      async function passes() {
+        // Validation passed
+        isValid = true
+      }
+      function fails() {
+        errors = validator.errors.all();
+        isValid = false
+      }
+      validator.checkAsync(passes, fails);
+      if (isValid) {
+        return isValid
+      } else {
+        return errors
+      }
+    
+    }
   },
 };

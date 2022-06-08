@@ -10,6 +10,6 @@
 
 module.exports.routes = {
     'POST /CreateEmployee' : 'EmployeeController.CreateEmployee',
-    'post /sendemail': 'EmailController.sendEmail',
+   
     'POST /listAll' : 'EmailController.listAll'
 };
