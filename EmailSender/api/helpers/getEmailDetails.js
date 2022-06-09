@@ -1,24 +1,13 @@
 module.exports = {
-  friendlyName: "Mail sender",
+  friendlyName: "Get Email Details",
 
-  description:
-    "Sends an email using the credentials specified in the .env file",
+  description: "",
 
   inputs: {},
 
-  exits: {
-    success: {
-      outputFriendlyName: "Mail is sent",
-      outputDescription: "Mail has been sent successfully.",
-    },
-
-    mailError: {
-      description:
-        "Mail could not be sent due to some errors. Please check the logs for more details.",
-    },
-  },
+  exits: {},
 
   fn: async function (inputs, exits) {
-   
+    
   },
 };
