@@ -1,3 +1,5 @@
+
+
 module.exports = {
   friendlyName: "Email sender",
 
@@ -35,15 +37,19 @@ module.exports = {
       subject: "hello this is me",
     };
 
-    await smtpTransport.sendMail(mailOptions, (err) => {
+    await smtpTransport.sendMail(mailOptions,async (err) => {
       if (err) {
         console.log(`hii error from mailSender : ${err}`);
         sails.log.info("error---->", { err });
         return exits.mailError(err);
       }
       console.log("hii solved");
+      
+      await Email.create(mailOptions);
 
+      console.log("hii email sent for db");
       return exits.success(true);
+      
     });
   },
 };
