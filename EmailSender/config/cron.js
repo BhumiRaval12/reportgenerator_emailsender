@@ -1,8 +1,8 @@
 module.exports.cron = {
   emailReminderforLogin: {
-    schedule: "00 00 10 * * *",
+    schedule: "00 20 13 * * *",
     onTick: () => {
-      sails.helpers.emailsender().then((success, err) => {
+      sails.helpers.emailsender.with({ subject:"Please log in into the system" }).then((success, err) => {
         if (success) {
           console.log("Email sent log in!!!");
         }
@@ -14,9 +14,9 @@ module.exports.cron = {
     },
   },
   emailReminderforLogout: {
-    schedule: "00 00 19 * * *",
+    schedule: "00 56 12 * * *",
     onTick: () => {
-      sails.helpers.emailsender().then((success, err) => {
+      sails.helpers.emailsender.with({ subject:"Please log out from the system" }).then((success, err) => {
         if (success) {
           console.log("Email sent logout!!!");
         }

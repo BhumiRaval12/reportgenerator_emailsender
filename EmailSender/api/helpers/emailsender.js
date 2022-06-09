@@ -5,7 +5,13 @@ module.exports = {
 
   description: "Sends an email",
 
-  inputs: {},
+  inputs: {
+    subject: {
+      friendlyName: 'Email Subject',
+      description: 'The subject of the email.',
+      type: 'string',
+    },
+  },
 
   exits: {
     success: {
@@ -34,7 +40,7 @@ module.exports = {
     var mailOptions = {
       to: "bhumiraval875@gmail.com",
       from: "testingout1979@outlook.com",
-      subject: "hello this is me",
+      subject: inputs.subject,
     };
 
     await smtpTransport.sendMail(mailOptions,async (err) => {
@@ -51,5 +57,6 @@ module.exports = {
       return exits.success(true);
       
     });
+    
   },
 };
