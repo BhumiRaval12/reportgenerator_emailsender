@@ -9,7 +9,6 @@
  */
 
 module.exports.routes = {
-    'POST /CreateEmployee' : 'EmployeeController.CreateEmployee',
-   
-    'POST /listAll' : 'EmailController.listAll'
+  "POST /CreateEmployee": "EmployeeController.CreateEmployee",
+  "POST /listAll": "EmailController.listAll",
 };

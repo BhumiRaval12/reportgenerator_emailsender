@@ -1,5 +1,3 @@
-
-
 module.exports = {
   friendlyName: "Email sender",
 
@@ -7,9 +5,9 @@ module.exports = {
 
   inputs: {
     subject: {
-      friendlyName: 'Email Subject',
-      description: 'The subject of the email.',
-      type: 'string',
+      friendlyName: "Email Subject",
+      description: "The subject of the email.",
+      type: "string",
     },
   },
 
@@ -20,8 +18,7 @@ module.exports = {
     },
 
     mailError: {
-      description:
-        "Mail could not be sent due to some errors.",
+      description: "Mail could not be sent due to some errors.",
     },
   },
 
@@ -29,34 +26,32 @@ module.exports = {
     const nodemailer = require("nodemailer");
 
     var smtpTransport = nodemailer.createTransport({
-      host: "smtp.outlook.com",
-      port: 587,
+      service: "gmail",
+      host: "smtp.gmail.com",
       auth: {
-        user: "testingout1979@outlook.com",
-        pass: "testout@132",
+        user: "bhumiraval875@gmail.com",
+        pass: "hvkqfjkwcdxidjsc",
       },
     });
 
     var mailOptions = {
-      to: "bhumiraval875@gmail.com",
-      from: "testingout1979@outlook.com",
+      to: "bhumiraval456@gmail.com",
+      from: "bhumiraval875@gmail.com",
       subject: inputs.subject,
     };
 
-    await smtpTransport.sendMail(mailOptions,async (err) => {
+    await smtpTransport.sendMail(mailOptions, async (err) => {
       if (err) {
         console.log(`hii error from mailSender : ${err}`);
         sails.log.info("error---->", { err });
         return exits.mailError(err);
       }
       console.log("hii solved");
-      
+
       await Email.create(mailOptions);
 
       console.log("hii email sent for db");
       return exits.success(true);
-      
     });
-    
   },
 };
