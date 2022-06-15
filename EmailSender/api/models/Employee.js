@@ -4,8 +4,7 @@
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
-
-//let nodemailer = require('nodemailer');
+let Validator = require("validatorjs");
 
 module.exports = {
   attributes: {
@@ -26,5 +25,24 @@ module.exports = {
       type: "string",
       allowNull: false,
     },
+  },
+  validateEmployee: function (data) {
+    let result = {};
+    let rules = {
+      email: "required|email",
+      fname: "required|string|min:2",
+      lname: "required|string|min:2",
+      designation: "required|string",
+    };
+    let validation = new Validator(data, rules);
+    if (validation.passes()) {
+      result["hasError"] = false;
+    }
+    if (validation.fails()) {
+      result["hasError"] = true;
+      result["errors"] = validation.errors.all();
+     
+    }
+    return result;
   },
 };
