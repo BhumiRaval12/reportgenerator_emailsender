@@ -13,8 +13,7 @@ module.exports = {
 
   exits: {
     success: {
-      outputFriendlyName: "Mail is sent",
-      outputDescription: "Mail has been sent successfully.",
+      description: "All done.",
     },
 
     mailError: {
