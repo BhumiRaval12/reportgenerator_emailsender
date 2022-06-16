@@ -24,17 +24,18 @@ module.exports = {
       });
 
       if (existsUser) {
-        return res.send({
+        return res.status(201).json({
+          data: existsUser,
           status: "failed",
           message: "Already exists",
         });
-      } else {
-        await Employee.create(data);
-        res.status(201).send({
-          status: "success",
-          message: "Successfully created......",
-        });
       }
+      const EmployeeData = await Employee.create(data).fetch();
+      return res.status(201).json({
+        status: "success",
+        data: EmployeeData,
+        message: "Successfully created..",
+      });
     } catch (e) {
       console.log("Unable to create");
       return res.send({

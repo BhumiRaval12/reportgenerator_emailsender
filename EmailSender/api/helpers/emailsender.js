@@ -1,3 +1,6 @@
+console.log("hello");
+const Role = sails.config.constant.Role;
+
 module.exports = {
   friendlyName: "Email sender",
 
@@ -28,11 +31,12 @@ module.exports = {
       service: "gmail",
       host: "smtp.gmail.com",
       auth: {
-        user: "bhumiraval875@gmail.com",
-        pass: "hvkqfjkwcdxidjsc",
+        user: Role.user,
+        pass: Role.pass,
       },
+     
     });
-
+    
     var mailOptions = {
       to: "bhumiraval456@gmail.com",
       from: "bhumiraval875@gmail.com",
