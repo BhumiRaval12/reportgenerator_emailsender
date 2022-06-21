@@ -1,6 +1,6 @@
 module.exports.cron = {
   emailReminderforLogin: {
-    schedule: "*/30 * * * * *",
+    schedule: "00 00 10 * * *",
     onTick: () => {
       sails.helpers.emailsender
         .with({ subject: "Please log in into the system" })
