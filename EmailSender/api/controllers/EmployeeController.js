@@ -50,126 +50,149 @@ module.exports = {
     }
   },
   CreateReportforEmployee: async (req, res) => {
-    id = req.query.id;
-    const Employeedetails = await Employee.find({
-      where: id,
-    });
+    try {
+      id = req.query.id;
 
-    console.log(Employeedetails);
+      const Employeedetails = await Employee.find({
+        where: id,
+      });
 
-    const findData = await Email.find({
-      where: {
-        id: id,
-      },
-    });
+      console.log(Employeedetails);
 
-    let start_date, end_date;
+      const findData = await Email.find({
+        where: {
+          id: id,
+        },
+      });
 
-    //sort by date range
-    if (req.param("startDate") && req.param("endDate")) {
-      start_date = moment(req.param("startDate"), "YYYY/MM/DD")
-        .startOf("day")
-        .valueOf();
-      end_date = moment(req.param("endDate"), "YYYY/MM/DD")
-        .endOf("day")
-        .valueOf();
-      findData.where = {
-        ...findData.where,
-        createdAt: { ">": start_date, "<": end_date },
-      };
-      console.log("date", start_date);
-      console.log("date", end_date);
+      let start_date, end_date;
+
+      //sort by date range
+      if (req.param("startDate") && req.param("endDate")) {
+        start_date = moment(req.param("startDate"), "YYYY/MM/DD")
+          .startOf("day")
+          .valueOf();
+        end_date = moment(req.param("endDate"), "YYYY/MM/DD")
+          .endOf("day")
+          .valueOf();
+        findData.where = {
+          ...findData.where,
+          createdAt: { ">": start_date, "<": end_date },
+        };
+        console.log("date", start_date);
+        console.log("date", end_date);
+      }
+
+      let query = await sails.sendNativeQuery(
+        `SELECT * FROM email where createdAt between ${start_date} and ${end_date} and id=${id}`
+      );
+
+      const jsonData = JSON.parse(JSON.stringify(query));
+
+      const json2csvParser = new Json2csvParser({ header: true });
+      const csv = json2csvParser.parse(jsonData);
+      fs.writeFile("Email-Details.csv", csv, function (error) {
+        if (error) throw error;
+        console.log("Write to Email-Details.csv successfully!");
+      });
+
+      const resData = jsonData.rows;
+      console.log(resData);
+      return res.send({
+        data: [resData, Employeedetails],
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        data: "",
+        error: "Unknown error",
+      });
     }
-
-    let query = await sails.sendNativeQuery(
-      `SELECT * FROM email where createdAt between ${start_date} and ${end_date} and id=${id}`
-    );
-
-    const jsonData = JSON.parse(JSON.stringify(query));
-
-    const json2csvParser = new Json2csvParser({ header: true });
-    const csv = json2csvParser.parse(jsonData);
-    fs.writeFile("Email-Details.csv", csv, function (error) {
-      if (error) throw error;
-      console.log("Write to Email-Details.csv successfully!");
-    });
-
-    const resData = jsonData.rows;
-    console.log(resData);
-    return res.send({
-      data: [resData, Employeedetails],
-    });
   },
   Downloadcsv: async (req, res) => {
-    Email.find().then((objs) => {
-      let EDetails = [];
-      objs.forEach((obj) => {
-        const { id, from, to, subject, createdAt, updatedAt } = obj;
-        EDetails.push({ id, from, to, subject, createdAt, updatedAt });
+    try {
+      Email.find().then((objs) => {
+        let EDetails = [];
+        objs.forEach((obj) => {
+          const { id, from, to, subject, createdAt, updatedAt } = obj;
+          EDetails.push({ id, from, to, subject, createdAt, updatedAt });
+        });
+        const csvFields = [
+          "id",
+          "from",
+          "to",
+          "subject",
+          "createdAt",
+          "updatedAt",
+        ];
+        const csvParser = new CsvParser({ csvFields });
+        const csvData = csvParser.parse(EDetails);
+        res.setHeader("Content-Type", "text/csv");
+        res.setHeader(
+          "Content-Disposition",
+          "attachment; filename=Email-Details.csv"
+        );
+        // res.status(200).send(csvData);
+        // res.Download(csvData);
+        res.status(200).end(csvData);
       });
-      const csvFields = [
-        "id",
-        "from",
-        "to",
-        "subject",
-        "createdAt",
-        "updatedAt",
-      ];
-      const csvParser = new CsvParser({ csvFields });
-      const csvData = csvParser.parse(EDetails);
-      res.setHeader("Content-Type", "text/csv");
-      res.setHeader(
-        "Content-Disposition",
-        "attachment; filename=Email-Details.csv"
-      );
-      // res.status(200).send(csvData);
-      // res.Download(csvData);
-      res.status(200).end(csvData);
-    });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        data: "",
+        error: "Unknown error",
+      });
+    }
   },
   CreateReportforMultipleEmployee: async (req, res) => {
-    // id = req.query.id;
-    const Employeedetails = await Employee.find();
+    try {
+      const Employeedetails = await Employee.find();
+      console.log(Employeedetails);
 
-    console.log(Employeedetails);
+      const findData = await Email.find();
 
-    const findData = await Email.find();
+      let start_date, end_date;
 
-    let start_date, end_date;
+      //sort by date range
+      if (req.param("startDate") && req.param("endDate")) {
+        start_date = moment(req.param("startDate"), "YYYY/MM/DD")
+          .startOf("day")
+          .valueOf();
+        end_date = moment(req.param("endDate"), "YYYY/MM/DD")
+          .endOf("day")
+          .valueOf();
+        findData.where = {
+          ...findData.where,
+          createdAt: { ">": start_date, "<": end_date },
+        };
+        console.log("date", start_date);
+        console.log("date", end_date);
+      }
 
-    //sort by date range
-    if (req.param("startDate") && req.param("endDate")) {
-      start_date = moment(req.param("startDate"), "YYYY/MM/DD")
-        .startOf("day")
-        .valueOf();
-      end_date = moment(req.param("endDate"), "YYYY/MM/DD")
-        .endOf("day")
-        .valueOf();
-      findData.where = {
-        ...findData.where,
-        createdAt: { ">": start_date, "<": end_date },
-      };
-      console.log("date", start_date);
-      console.log("date", end_date);
+      let query = await sails.sendNativeQuery(
+        `SELECT * FROM email where createdAt between ${start_date} and ${end_date}  `
+      );
+
+      const jsonData = JSON.parse(JSON.stringify(query));
+
+      const json2csvParser = new Json2csvParser({ header: true });
+      const csv = json2csvParser.parse(jsonData);
+      fs.writeFile("Email-Details.csv", csv, function (error) {
+        if (error) throw error;
+        console.log("Write to Email-Details.csv successfully!");
+      });
+
+      const resData = jsonData.rows;
+      console.log(resData);
+      return res.send({
+        data: [resData, Employeedetails],
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: 500,
+        data: "",
+        error: "Unknown error",
+      });
     }
-
-    let query = await sails.sendNativeQuery(
-      `SELECT * FROM email where createdAt between ${start_date} and ${end_date}  `
-    );
-
-    const jsonData = JSON.parse(JSON.stringify(query));
-
-    const json2csvParser = new Json2csvParser({ header: true });
-    const csv = json2csvParser.parse(jsonData);
-    fs.writeFile("Email-Details.csv", csv, function (error) {
-      if (error) throw error;
-      console.log("Write to Email-Details.csv successfully!");
-    });
-
-    const resData = jsonData.rows;
-    console.log(resData);
-    return res.send({
-      data: [resData, Employeedetails],
-    });
   },
 };
