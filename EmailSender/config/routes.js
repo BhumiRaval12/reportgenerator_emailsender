@@ -12,4 +12,7 @@ module.exports.routes = {
   "POST /CreateEmployee": "EmployeeController.CreateEmployee",
   "POST /listAll": "EmailController.listAll",
   "GET /EmployeeReport": "EmployeeController.CreateReportforEmployee",
+  "GET /Exportfile": "EmployeeController.Downloadcsv",
+  "GET /MultipleEmployeeReport": "EmployeeController.CreateReportforMultipleEmployee"
 };
+
