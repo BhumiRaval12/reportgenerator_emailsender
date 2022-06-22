@@ -82,7 +82,7 @@ module.exports = {
     }
 
     let query = await sails.sendNativeQuery(
-      `SELECT * FROM email where createdAt between ${start_date} and ${end_date} and id=${id}  `
+      `SELECT * FROM email where createdAt between ${start_date} and ${end_date} and id=${id}`
     );
 
     const jsonData = JSON.parse(JSON.stringify(query));
