@@ -28,7 +28,7 @@ module.exports = {
       },
     });
     const mailOptions = {
-      to: "bhumiraval456@gmail.com,bhumir@zignuts.com,bhumiben.raval105581@marwadiuniversity.ac.in",
+      to: "bhumiraval456@gmail.com",
       from: "bhumiraval875@gmail.com",
       subject: inputs.subject,
     };

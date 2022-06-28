@@ -1,2 +1,8 @@
-"rows","fields"
-"[{""id"":30,""from"":""bhumiraval875@gmail.com"",""to"":""bhumiraval456@gmail.com , bhumir@zignuts.com ,bhumiben.raval105581@marwadiuniversity.ac.in , ravirajc@zignuts.com , chiragt@zignuts.com"",""subject"":""Please log in into the system"",""createdAt"":1655881322941,""updatedAt"":1655881322941}]","[{""catalog"":""def"",""db"":""E_senderDB"",""table"":""email"",""orgTable"":""email"",""name"":""id"",""orgName"":""id"",""charsetNr"":63,""length"":11,""type"":3,""flags"":16899,""decimals"":0,""zeroFill"":false,""protocol41"":true},{""catalog"":""def"",""db"":""E_senderDB"",""table"":""email"",""orgTable"":""email"",""name"":""from"",""orgName"":""from"",""charsetNr"":33,""length"":300,""type"":253,""flags"":4097,""decimals"":0,""zeroFill"":false,""protocol41"":true},{""catalog"":""def"",""db"":""E_senderDB"",""table"":""email"",""orgTable"":""email"",""name"":""to"",""orgName"":""to"",""charsetNr"":33,""length"":900,""type"":253,""flags"":4097,""decimals"":0,""zeroFill"":false,""protocol41"":true},{""catalog"":""def"",""db"":""E_senderDB"",""table"":""email"",""orgTable"":""email"",""name"":""subject"",""orgName"":""subject"",""charsetNr"":33,""length"":300,""type"":253,""flags"":4097,""decimals"":0,""zeroFill"":false,""protocol41"":true},{""catalog"":""def"",""db"":""E_senderDB"",""table"":""email"",""orgTable"":""email"",""name"":""createdAt"",""orgName"":""createdAt"",""charsetNr"":63,""length"":20,""type"":8,""flags"":0,""decimals"":0,""zeroFill"":false,""protocol41"":true},{""catalog"":""def"",""db"":""E_senderDB"",""table"":""email"",""orgTable"":""email"",""name"":""updatedAt"",""orgName"":""updatedAt"",""charsetNr"":63,""length"":20,""type"":8,""flags"":0,""decimals"":0,""zeroFill"":false,""protocol41"":true}]"
+"id","EmployeeDetails"
+30,"
+ email: helloy@gmail.com,
+ fname: ruyyy,
+ lname: gilbertyyyy,
+ designation: ,"
+"id","from","to","createdAt","updatedAt"
+30,"bhumiraval875@gmail.com","bhumiraval456@gmail.com , bhumir@zignuts.com ,bhumiben.raval105581@marwadiuniversity.ac.in , ravirajc@zignuts.com , chiragt@zignuts.com",1655881322941,1655881322941

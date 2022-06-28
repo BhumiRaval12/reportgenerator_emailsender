@@ -8,7 +8,6 @@
 const fs = require("fs");
 const Json2csvParser = require("json2csv").Parser;
 const moment = require("moment");
-const CsvParser = require("json2csv").Parser;
 
 module.exports = {
   CreateEmployee: async (req, res) => {
@@ -52,8 +51,7 @@ module.exports = {
   CreateReportforEmployee: async (req, res) => {
     try {
       id = req.query.id;
-
-      const Employeedetails = await Employee.find({
+      const Employeedetails = await Employee.findOne({
         where: id,
       });
 
@@ -89,18 +87,45 @@ module.exports = {
 
       const jsonData = JSON.parse(JSON.stringify(query));
 
-      const json2csvParser = new Json2csvParser({ header: true });
-      const csv = json2csvParser.parse(jsonData);
+      const fields1 = ["id", "from", "to", "createdAt", "updatedAt"];
+      const newLine = "\r\n";
+      const fields2 = ["id", "EmployeeDetails"];
+
+      let empStr = `
+ email: ${Employeedetails.email},
+ fname: ${Employeedetails.fname},
+ lname: ${Employeedetails.lname},
+ designation: ${Employeedetails.designation},`;
+
+      let emparr = [{ id: Employeedetails.id, EmployeeDetails: empStr }];
+
+      const json2csvParser = new Json2csvParser({
+        fields: fields2,
+      });
+      console.log(jsonData.rows);
+
+      const csv = json2csvParser.parse(emparr) + newLine;
+
       fs.writeFile("Email-Details.csv", csv, function (error) {
         if (error) throw error;
+
         console.log("Write to Email-Details.csv successfully!");
       });
 
-      const resData = jsonData.rows;
-      console.log(resData);
-      return res.send({
-        data: [resData, Employeedetails],
+      const json2csvParsertwo = new Json2csvParser({
+        fields: fields1,
       });
+      const csv1 = json2csvParsertwo.parse(jsonData.rows);
+
+      fields = csv1 + newLine;
+
+      const final = fs.appendFile("Email-Details.csv", fields, function (err) {
+        if (err) throw err;
+        console.log("file saved");
+      });
+      console.log(final);
+
+      res.attachment("Email-Details.csv").send(final);
     } catch (error) {
       return res.status(500).json({
         status: 500,
@@ -109,41 +134,7 @@ module.exports = {
       });
     }
   },
-  Downloadcsv: async (req, res) => {
-    try {
-      Email.find().then((objs) => {
-        let EDetails = [];
-        objs.forEach((obj) => {
-          const { id, from, to, subject, createdAt, updatedAt } = obj;
-          EDetails.push({ id, from, to, subject, createdAt, updatedAt });
-        });
-        const csvFields = [
-          "id",
-          "from",
-          "to",
-          "subject",
-          "createdAt",
-          "updatedAt",
-        ];
-        const csvParser = new CsvParser({ csvFields });
-        const csvData = csvParser.parse(EDetails);
-        res.setHeader("Content-Type", "text/csv");
-        res.setHeader(
-          "Content-Disposition",
-          "attachment; filename=Email-Details.csv"
-        );
-        // res.status(200).send(csvData);
-        // res.Download(csvData);
-        res.status(200).end(csvData);
-      });
-    } catch (error) {
-      return res.status(500).json({
-        status: 500,
-        data: "",
-        error: "Unknown error",
-      });
-    }
-  },
+
   CreateReportforMultipleEmployee: async (req, res) => {
     try {
       const Employeedetails = await Employee.find();
@@ -174,7 +165,6 @@ module.exports = {
       );
 
       const jsonData = JSON.parse(JSON.stringify(query));
-
       const json2csvParser = new Json2csvParser({ header: true });
       const csv = json2csvParser.parse(jsonData);
       fs.writeFile("Email-Details.csv", csv, function (error) {
@@ -185,7 +175,7 @@ module.exports = {
       const resData = jsonData.rows;
       console.log(resData);
       return res.send({
-        data: [resData, Employeedetails],
+        data: { Employeedetails, resData },
       });
     } catch (error) {
       return res.status(500).json({
